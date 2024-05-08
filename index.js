@@ -28,17 +28,22 @@ app.get("/api/:date?", function (req,res) {
 
   console.log("Date parameter received:", req.params.date);
   const date = req.params.date
+  const currentDate = new Date();
   
   const dateObj = new Date(date);
   dateObj.getTime();
-  const unix = dateObj.toISOString();
+  const unix = Math.floor(dateObj.getTime() / 1000);
   const dateString = dateObj.toString();
 
 
   if (dateObj) {
     res.json({unix: unix, utc: dateString });
-  } else {
-    res.send("No date provided!");
+  } 
+  else if (dateObj == null) {
+    res.json({unix: currentDate})
+  }
+  else {
+    res.json({error: "Invalid Date"});
   }
 
 
