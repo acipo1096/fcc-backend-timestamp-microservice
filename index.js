@@ -74,7 +74,10 @@ This regex ensures that the input string strictly adheres to the "YYYY-MM-DD" fo
   dateString = dateObj.toString();
 
   if (date == undefined) {
-    res.json({unix: currentDate});
+    res.json({
+      unix: currentDate.getTime(),
+      utc: currentDate.getTime()
+    });
   }
   else if (!regex.test(date) && date !== undefined) {
     res.json({error: "Invalid Date"});
