@@ -76,6 +76,9 @@ This regex ensures that the input string strictly adheres to the "YYYY-MM-DD" fo
   // Set unix string
   const unix = Math.floor(dateObj.getTime() / 1000);
 
+  // Convert date object to date string for json
+  dateString = dateObj.toString();
+
 
   console.log(date)
 
