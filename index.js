@@ -26,8 +26,9 @@ app.get("/api/hello", function (req, res) {
 
 app.get("/api/:date?", function (req,res) {    
   
-  const timestampRegex = /^\d{13}/
+  const timestampRegex = /^\d{1,13}/
   const dateRegex = /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+  let dateObj = '';
   // See below for explanation
   /*
   Certainly! The regular expression `const regex = /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;` is designed to match date strings formatted as "YYYY-MM-DD". Let’s break down each part of this regex to understand how it validates the date format:
@@ -62,10 +63,19 @@ This regex ensures that the input string strictly adheres to the "YYYY-MM-DD" fo
 
   const date = req.params.date;
   const currentDate = new Date();
-  const dateObj = new Date(date);
+
+  if (timestampRegex.test(date)) {
+    console.log("thunder")
+    let timestamp = parseInt(date,10);
+    dateObj = new Date(timestamp);
+  }
+  else {
+    dateObj = new Date(date);
+  }
 
 
-  console.log(date)
+  console.log(dateObj);
+
 
   // Modifiers
   // Get timestring from date object
@@ -84,8 +94,8 @@ This regex ensures that the input string strictly adheres to the "YYYY-MM-DD" fo
       utc: currentDate.toUTCString()
     });
   }
-  else if ((!dateRegex.test(date) || !timestampRegex.test(date)) && date !== undefined) {
-    console.log(timestampRegex.test);
+  else if (!timestampRegex.test(date) && date !== undefined) {
+    console.log(!timestampRegex.test(date));
     res.json({error: "Invalid Date"});
   } 
   else {
