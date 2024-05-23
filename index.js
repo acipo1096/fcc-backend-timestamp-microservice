@@ -26,8 +26,8 @@ app.get("/api/hello", function (req, res) {
 
 app.get("/api/:date?", function (req,res) {    
   
-  const timestampRegex = /^\d{1,13}/
   const dateRegex = /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+  const timestampRegex = /^\d{1,13}/
   let dateObj;
   // See below for explanation
   /*
@@ -64,13 +64,15 @@ This regex ensures that the input string strictly adheres to the "YYYY-MM-DD" fo
   const date = req.params.date;
   const currentDate = new Date();
 
-  if (timestampRegex.test(date)) {
-    console.log(timestampRegex.test(date))
+  if (dateRegex.test(date)) {
+    dateObj = new Date(date);
+  }
+  else if (timestampRegex.test(date)) {
     let timestamp = parseInt(date);
     dateObj = new Date(timestamp);
   }
   else {
-    dateObj = new Date(date);
+    res.json({error: "Invalid Date"});
   }
 
 
