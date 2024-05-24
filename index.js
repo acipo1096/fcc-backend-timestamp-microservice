@@ -72,7 +72,10 @@ This regex ensures that the input string strictly adheres to the "YYYY-MM-DD" fo
     dateObj = new Date(timestamp);
   }
   else {
-    res.json({error: "Invalid Date"});
+    return res.json({
+      unix: currentDate.getTime(),
+      utc: currentDate.toUTCString()
+    });
   }
 
 
@@ -90,13 +93,13 @@ This regex ensures that the input string strictly adheres to the "YYYY-MM-DD" fo
 
 
   // Validate timestamp and return
-  if (date == undefined) {
-    res.json({
-      unix: currentDate.getTime(),
-      utc: currentDate.toUTCString()
-    });
-  }
-  else if (!timestampRegex.test(date) && date !== undefined) {
+  // if (date === undefined) {
+  //   res.json({
+  //     unix: currentDate.getTime(),
+  //     utc: currentDate.toUTCString()
+  //   });
+  // }
+  if (!timestampRegex.test(date) && date !== undefined) {
     console.log(!timestampRegex.test(date));
     res.json({error: "Invalid Date"});
   } 
