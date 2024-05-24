@@ -71,13 +71,18 @@ This regex ensures that the input string strictly adheres to the "YYYY-MM-DD" fo
     let timestamp = parseInt(date);
     dateObj = new Date(timestamp);
   }
-  else {
+  else if (date === undefined) {
     return res.json({
       unix: currentDate.getTime(),
       utc: currentDate.toUTCString()
     });
+  } else {
+    return res.json({error: "Invalid Date"});
   }
 
+  // Can date be parsed?
+  let checkDate = new Date(date);
+  console.log("Date is " + checkDate)
 
   // Modifiers
   // Get timestring from date object
