@@ -27,7 +27,7 @@ app.get("/api/hello", function (req, res) {
 app.get("/api/:date?", function (req,res) {    
   
   const dateRegex = /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
-  const timestampRegex = /^\d{1,13}/
+  const timestampRegex = /^\d{13}/
   let dateObj;
   // See below for explanation
   /*
@@ -63,38 +63,44 @@ This regex ensures that the input string strictly adheres to the "YYYY-MM-DD" fo
 
   const date = req.params.date;
   const currentDate = new Date();
+  let unix;
+  let dateString;
 
-  if (dateRegex.test(date)) {
-    dateObj = new Date(date);
-  }
-  else if (timestampRegex.test(date)) {
+  // Check if valid date
+  dateObj = new Date(date);
+  console.log(dateObj)
+
+  if (timestampRegex.test(date)) {
+    console.log("this is a properly formatted timestamp");
     let timestamp = parseInt(date);
     dateObj = new Date(timestamp);
   }
+
+  if (dateObj != "Invalid Date") {
+      // Can date be parsed?
+      let checkDate = new Date(date);
+      console.log("Date is " + checkDate)
+
+
+      // Set unix string
+      const unix = Math.floor(dateObj.getTime());
+      console.log(unix)
+
+      // Set date string
+      let dateString = dateObj.toUTCString();
+
+      return res.json({unix: unix, utc: dateString });
+  }
+
   else if (date === undefined) {
     return res.json({
       unix: currentDate.getTime(),
       utc: currentDate.toUTCString()
     });
+
   } else {
     return res.json({error: "Invalid Date"});
   }
-
-  // Can date be parsed?
-  let checkDate = new Date(date);
-  console.log("Date is " + checkDate)
-
-  // Modifiers
-  // Get timestring from date object
-
-  console.log(dateObj)
-
-  // Set unix string
-  const unix = Math.floor(dateObj.getTime());
-  console.log(unix)
-
-  // Set date string
-  let dateString = dateObj.toUTCString();
 
 
   // Validate timestamp and return
@@ -104,8 +110,7 @@ This regex ensures that the input string strictly adheres to the "YYYY-MM-DD" fo
   //     utc: currentDate.toUTCString()
   //   });
   // }
-  if (!timestampRegex.test(date) && date !== undefined) {
-    console.log(!timestampRegex.test(date));
+  if (!dateRegex.test(date) && !timestampRegex.test(date) && date !== undefined) {
     res.json({error: "Invalid Date"});
   } 
   else {
